@@ -1,10 +1,11 @@
+#Programmed by ljq and her mysterious team member
 clc;clear;
 tic;
-%t_move_choice=[0,20,33,46];%ÒÆ¶¯i¸öµ¥Î»ËùĞèÊ±¼ä
-t_odd=15;%RGVÎªCNC1#£¬3#£¬5#£¬7#Ò»´ÎÉÏÏÂÁÏËùĞèÊ±¼ä
-t_even=15;%RGVÎªCNC2#£¬4#£¬6#£¬8#Ò»´ÎÉÏÏÂÁÏËùĞèÊ±¼ä
-t_wash=25;%RGVÍê³ÉÒ»¸öÎïÁÏµÄÇåÏ´×÷ÒµËùĞèÊ±¼ä
-iter=0;%ËÑË÷´ÎÊı
+%t_move_choice=[0,20,33,46];%ç§»åŠ¨iä¸ªå•ä½æ‰€éœ€æ—¶é—´
+t_odd=15;%RGVä¸ºCNC1#ï¼Œ3#ï¼Œ5#ï¼Œ7#ä¸€æ¬¡ä¸Šä¸‹æ–™æ‰€éœ€æ—¶é—´
+t_even=15;%RGVä¸ºCNC2#ï¼Œ4#ï¼Œ6#ï¼Œ8#ä¸€æ¬¡ä¸Šä¸‹æ–™æ‰€éœ€æ—¶é—´
+t_wash=25;%RGVå®Œæˆä¸€ä¸ªç‰©æ–™çš„æ¸…æ´—ä½œä¸šæ‰€éœ€æ—¶é—´
+iter=0;%æœç´¢æ¬¡æ•°
 cncnum1=3;cncnum2=2; 
 loc=round((cncnum2+cncnum1)/2);
 t_move_choice=[20:13:13*(loc-1)+7];
@@ -13,27 +14,27 @@ t_move_choice=cat(2,temp,t_move_choice);
 while(iter<1000)
  %%
     CNC_num_1=[]; CNC_num_2=[];    down_1st=[]; down_2nd=[];    up_1st=[];  up_2nd=[];    location_all=[]; failure_task=[];t_consumeall=[];
-	CNC_order_state_1=zeros(1,cncnum1);%ÓÃÓÚ¼ÇÂ¼CNCiÕı´¦ÀíÄÄ¸öĞòºÅµÄÎïÁÏ
-    CNC_order_state_2=zeros(1,cncnum2);%ÓÃÓÚ¼ÇÂ¼CNCiÕı´¦ÀíÄÄ¸öĞòºÅµÄÎïÁÏ
-    CNC_1=zeros(1,cncnum1);%0±íÊ¾CNCÎ´ÔÚ¼Ó¹¤,µÚÒ»µÀ¹¤ĞòCNC
-    CNC_2=zeros(1,cncnum2);%0±íÊ¾CNCÎ´ÔÚ¼Ó¹¤£¬µÚ¶şµÀ¹¤ĞòCNC
-    CNC_worktime_1=zeros(1,cncnum1);%µÚÒ»µÀ¹¤ĞòCNCÒÑ¼Ó¹¤Ê±¼ä
+	CNC_order_state_1=zeros(1,cncnum1);%ç”¨äºè®°å½•CNCiæ­£å¤„ç†å“ªä¸ªåºå·çš„ç‰©æ–™
+    CNC_order_state_2=zeros(1,cncnum2);%ç”¨äºè®°å½•CNCiæ­£å¤„ç†å“ªä¸ªåºå·çš„ç‰©æ–™
+    CNC_1=zeros(1,cncnum1);%0è¡¨ç¤ºCNCæœªåœ¨åŠ å·¥,ç¬¬ä¸€é“å·¥åºCNC
+    CNC_2=zeros(1,cncnum2);%0è¡¨ç¤ºCNCæœªåœ¨åŠ å·¥ï¼Œç¬¬äºŒé“å·¥åºCNC
+    CNC_worktime_1=zeros(1,cncnum1);%ç¬¬ä¸€é“å·¥åºCNCå·²åŠ å·¥æ—¶é—´
     CNC_worktime_2=zeros(1,cncnum2);
-    CNC_failuretime_1=zeros(1,cncnum1);%¹ÊÕÏ¼ÆÊ±
-    CNC_failuretime_2=zeros(1,cncnum2);%¹ÊÕÏ¼ÆÊ±
-    CNC_repairtime_1=zeros(1,cncnum1);%ÏÂÒ»´Î¹ÊÕÏÊ±ĞŞ¸´ºÃµÄÊ±¼ä
-    CNC_repairtime_2=zeros(1,cncnum2);%ÏÂÒ»´Î¹ÊÕÏÊ±ĞŞ¸´ºÃµÄÊ±¼ä
+    CNC_failuretime_1=zeros(1,cncnum1);%æ•…éšœè®¡æ—¶
+    CNC_failuretime_2=zeros(1,cncnum2);%æ•…éšœè®¡æ—¶
+    CNC_repairtime_1=zeros(1,cncnum1);%ä¸‹ä¸€æ¬¡æ•…éšœæ—¶ä¿®å¤å¥½çš„æ—¶é—´
+    CNC_repairtime_2=zeros(1,cncnum2);%ä¸‹ä¸€æ¬¡æ•…éšœæ—¶ä¿®å¤å¥½çš„æ—¶é—´
     CNC_worktofailure_1=zeros(1,cncnum1);
     CNC_worktofailure_2=zeros(1,cncnum2);
     t_delta=0;
     time_all=0;
-    location_current=1;%³õÊ¼Î»ÖÃ
-    failure_num=0;%¹ÊÕÏ´ÎÊı
+    location_current=1;%åˆå§‹ä½ç½®
+    failure_num=0;%æ•…éšœæ¬¡æ•°
     n=0;
     n2=0;
     n3=0;
     
-    %²úÉúÏÂÒ»´Î¹ÊÕÏÊ±ĞŞ¸´ºÃµÄÊ±¼ä£¬ÔÚ600-1200Ö®¼ä
+    %äº§ç”Ÿä¸‹ä¸€æ¬¡æ•…éšœæ—¶ä¿®å¤å¥½çš„æ—¶é—´ï¼Œåœ¨600-1200ä¹‹é—´
     for i=1:cncnum1
         CNC_repairtime_1(i)=600+round((1200-600)*rand());
         %CNC_repairtime_2(i)=600+round((1200-600)*rand());
@@ -42,16 +43,16 @@ while(iter<1000)
         CNC_repairtime_2(i)=600+round((1200-600)*rand());
         %CNC_repairtime_2(i)=600+round((1200-600)*rand());
     end
-    %todo:¼ÓÈë¹ÊÕÏÇ°µÄ¼Ó¹¤Ê±¼ä
+    %todo:åŠ å…¥æ•…éšœå‰çš„åŠ å·¥æ—¶é—´
 %    
-    %²úÉúÏÂÒ»´Î¹ÊÕÏÊ±£¬CNCÒÑ¾­¹¤×÷ÁËµÄÊ±¼ä
+    %äº§ç”Ÿä¸‹ä¸€æ¬¡æ•…éšœæ—¶ï¼ŒCNCå·²ç»å·¥ä½œäº†çš„æ—¶é—´
     for i=1:cncnum1
         CNC_worktofailure_1(i)=round(400*rand());
     end
     for i=1:cncnum2
         CNC_worktofailure_2(i)=round(378*rand());
     end
-    %Ëæ»úÑ¡È¡µÚ¶ş¹¤Ğòcnc
+    %éšæœºé€‰å–ç¬¬äºŒå·¥åºcnc
     CNC_procedure=ones(1,cncnum1+cncnum2);
     m=zeros(1,cncnum2);
     for i=1:cncnum2
@@ -62,20 +63,20 @@ while(iter<1000)
                 break;
             end
         end
-        CNC_procedure(m(i))=2;%i±íÊ¾CNCiÎªµÚ¼¸µÀ¹¤Ğò
+        CNC_procedure(m(i))=2;%iè¡¨ç¤ºCNCiä¸ºç¬¬å‡ é“å·¥åº
     end
 %     
 % CNC_procedure=[1,2,1,2,1,2,1,2];
-    record_1=find(CNC_procedure==1); %¼ÇÂ¼Ä³Ì¨CNCÊÇµÚ¼¸¸ö×öµÚÒ»µÀ¹¤ĞòµÄ
-    record_2=find(CNC_procedure==2); %¼ÇÂ¼Ä³Ì¨CNCÊÇµÚ¼¸¸ö×öµÚ¶şµÀ¹¤ĞòµÄ
+    record_1=find(CNC_procedure==1); %è®°å½•æŸå°CNCæ˜¯ç¬¬å‡ ä¸ªåšç¬¬ä¸€é“å·¥åºçš„
+    record_2=find(CNC_procedure==2); %è®°å½•æŸå°CNCæ˜¯ç¬¬å‡ ä¸ªåšç¬¬äºŒé“å·¥åºçš„
     
-    %¸ù¾İ¹¤ĞòÈ·¶¨ÆäÉÏÏÂÁÏÊ±¼ä
+    %æ ¹æ®å·¥åºç¡®å®šå…¶ä¸Šä¸‹æ–™æ—¶é—´
     ss=0;t=0;
     for i=1:cncnum1+cncnum2
         if(CNC_procedure(i)==1)
             ss=ss+1;
             if(mod(i,2))
-                t_1st_uAndD(ss)=t_odd;%µÚÒ»µÀ¹¤ĞòCNCÉÏÁÏÊ±¼ä
+                t_1st_uAndD(ss)=t_odd;%ç¬¬ä¸€é“å·¥åºCNCä¸Šæ–™æ—¶é—´
             else
                 t_1st_uAndD(ss)=t_even;
             end
@@ -91,11 +92,11 @@ while(iter<1000)
       
     while(time_all<=8*3600)
 %%
-%µÚÒ»µÀ¹¤Ğò
+%ç¬¬ä¸€é“å·¥åº
         n=n+1;
-        location_all(n,1)=location_current;%¼ÇÂ¼ÈÎÎñn¹¤Ğò1RGVÔË¶¯Î»ÖÃ
-        task_procedure(n)=1;%ÈÎÎñn´¦ÓÚµÚÒ»µÀ¹¤Ğò
-        %ÏÈÈ¥CNC_1ÉÏÁÏ£¬Èô¶¼ÔÚ¹¤×÷»ò¹ÊÕÏ,ÔòµÈ´ı×î¿ìÍê³ÉµÄÒ»¸ö
+        location_all(n,1)=location_current;%è®°å½•ä»»åŠ¡nå·¥åº1RGVè¿åŠ¨ä½ç½®
+        task_procedure(n)=1;%ä»»åŠ¡nå¤„äºç¬¬ä¸€é“å·¥åº
+        %å…ˆå»CNC_1ä¸Šæ–™ï¼Œè‹¥éƒ½åœ¨å·¥ä½œæˆ–æ•…éšœ,åˆ™ç­‰å¾…æœ€å¿«å®Œæˆçš„ä¸€ä¸ª
         while(isempty(find(CNC_1==0)))
             a=max(CNC_worktime_1);
             t_delta_1=400-a;
@@ -111,19 +112,19 @@ while(iter<1000)
             
             time_all=time_all+t_delta;
             
-            CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_delta;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_1µÄÒÑ¼Ó¹¤Ê±¼ä
-            CNC_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNCÖÃ0
-            CNC_worktime_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+            CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_delta;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_1çš„å·²åŠ å·¥æ—¶é—´
+            CNC_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCç½®0
+            CNC_worktime_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
             
-            CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_delta;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_2µÄÒÑ¼Ó¹¤Ê±¼ä
-            CNC_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNCÖÃ0
-            CNC_worktime_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+            CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_delta;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_2çš„å·²åŠ å·¥æ—¶é—´
+            CNC_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCç½®0
+            CNC_worktime_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
             
-            CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_1µÄÒÑ¹ÊÕÏÊ±¼ä
+            CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_1çš„å·²æ•…éšœæ—¶é—´
             index=find(CNC_failuretime_1>=CNC_repairtime_1+CNC_worktofailure_1);
-            if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-                CNC_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
-                CNC_failuretime_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
+            if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+                CNC_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
+                CNC_failuretime_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
                 [o,p]=size(index);
                 for i=1:p
                     CNC_repairtime_1(index(p))=600+round((1200-600)*rand());
@@ -132,11 +133,11 @@ while(iter<1000)
             end
             index=[];
             
-            CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(CNC_2==2)+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_2µÄÒÑ¹ÊÕÏÊ±¼ä
+            CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(CNC_2==2)+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_2çš„å·²æ•…éšœæ—¶é—´
             index=find(CNC_failuretime_2>=CNC_repairtime_2+CNC_worktofailure_2);
-            if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-                CNC_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
-                CNC_failuretime_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
+            if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+                CNC_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
+                CNC_failuretime_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
                 [o,p]=size(index);
                 for i=1:p
                     CNC_repairtime_2(index(p))=600+round((1200-600)*rand());
@@ -145,17 +146,17 @@ while(iter<1000)
             end
             index=[];
         end
-        %¾àÀë×î½ü 221 245    Ê±¼ä×î¶Ì 217 245 ¾àÀë×î¶Ì+¸ÅÂÊ   213 247   Ê±¼ä×î¶Ì+¸ÅÂÊ  213 248
+        %è·ç¦»æœ€è¿‘ 221 245    æ—¶é—´æœ€çŸ­ 217 245 è·ç¦»æœ€çŸ­+æ¦‚ç‡   213 247   æ—¶é—´æœ€çŸ­+æ¦‚ç‡  213 248
         
         
-        %¾àÀë×î½üËã·¨
+        %è·ç¦»æœ€è¿‘ç®—æ³•
 %         numa=record_1(find(CNC_1==0));
 %         sa=abs(location_current-ceil(numa/2));
 %         num=numa(find(sa==min(sa)));
 %         num=num(1);
-        %¾àÀë×î½üËã·¨
+        %è·ç¦»æœ€è¿‘ç®—æ³•
         
-        %¾àÀë×î¶Ì+¸ÅÂÊ
+        %è·ç¦»æœ€çŸ­+æ¦‚ç‡
 %         numa=record_1(find(CNC_1==0));
 %         sa=abs(location_current-ceil(numa/2));
 %         [temp1,temp2]=sort(sa);
@@ -166,76 +167,76 @@ while(iter<1000)
 %                 break
 %             end
 %         end
-        %¾àÀë×î¶Ì+¸ÅÂÊ        
+        %è·ç¦»æœ€çŸ­+æ¦‚ç‡        
                 
                 
-        %Ê±¼ä×î¶ÌËã·¨
+        %æ—¶é—´æœ€çŸ­ç®—æ³•
         numa=record_1(find(CNC_1==0));
         t_consumeall=t_move_choice(ceil(record_1(find(CNC_1==0))/2))+t_odd+t_odd*(CNC_order_state_1(find(CNC_1==0))~=0);
         num=numa(find(t_consumeall==min(t_consumeall)));
         num=num(1);  
-        %Ê±¼ä×î¶ÌËã·¨
-%         %Ê±¼ä×î¶ÌËã·¨+¸ÅÂÊ
+        %æ—¶é—´æœ€çŸ­ç®—æ³•
+%         %æ—¶é—´æœ€çŸ­ç®—æ³•+æ¦‚ç‡
 %           numa=record_1(find(CNC_1==0));
 %           t_consumeall=t_move_choice(ceil(record_1(find(CNC_1==0))/2))+t_odd+t_odd*(CNC_order_state_1(find(CNC_1==0))~=0);
 %           [temp1,temp2]=sort(t_consumeall);
 %           
-%           while(1)%ÒÔ¸ÅÂÊËÑË÷ÒÑÍê³ÉµÄCNC_1
+%           while(1)%ä»¥æ¦‚ç‡æœç´¢å·²å®Œæˆçš„CNC_1
 %                num=numa(randi(length(numa),1));
 %                order=temp2(find(temp1==num));
 %                if(rand()<1/sum(1:order))
 %                    break
 %                end     
 %           end
-%         %Ê±¼ä×î¶ÌËã·¨ +¸ÅÂÊ         
+%         %æ—¶é—´æœ€çŸ­ç®—æ³• +æ¦‚ç‡         
 
         
-        s=abs(location_current-ceil(num/2));%ÓëÄ¿±êCNCµÄ¾àÀë
-        %·¢Éú¹ÊÕÏ,ÒÔ0.01µÄ¸ÅÂÊ£¬·ÅÆúµ±Ç°ÈÎÎñ
+        s=abs(location_current-ceil(num/2));%ä¸ç›®æ ‡CNCçš„è·ç¦»
+        %å‘ç”Ÿæ•…éšœ,ä»¥0.01çš„æ¦‚ç‡ï¼Œæ”¾å¼ƒå½“å‰ä»»åŠ¡
         if(round(99*rand())==0)
             CNC_1(find(record_1==num))=2;
             failure_num=failure_num+1;
-            failure_task(failure_num,1)=n;%¼ÇÂ¼¹ÊÕÏµÄÎïÁÏĞòºÅ
-            failure_task(failure_num,2)=num;%¼ÇÂ¼¹ÊÕÏµÄCNC
-            failure_task(failure_num,3)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_1(find(record_1==num));%¼ÇÂ¼CNC¹ÊÕÏµÄ¿ªÊ¼Ê±¼ä
-            failure_task(failure_num,4)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_1(find(record_1==num))+CNC_repairtime_1(find(record_1==num));%¼ÇÂ¼CNC¹ÊÕÏµÄ½áÊøÊ±¼ä
+            failure_task(failure_num,1)=n;%è®°å½•æ•…éšœçš„ç‰©æ–™åºå·
+            failure_task(failure_num,2)=num;%è®°å½•æ•…éšœçš„CNC
+            failure_task(failure_num,3)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_1(find(record_1==num));%è®°å½•CNCæ•…éšœçš„å¼€å§‹æ—¶é—´
+            failure_task(failure_num,4)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_1(find(record_1==num))+CNC_repairtime_1(find(record_1==num));%è®°å½•CNCæ•…éšœçš„ç»“æŸæ—¶é—´
         end     
         
         
         
         if(CNC_order_state_1(find(record_1==num))~=0)
-            n2=CNC_order_state_1(find(record_1==num));%µ±Ç°ÒªÏÂÁÏµÄÎïÁÏµÄĞòºÅ£¬¼´È·ÈÏÕıÒª×öµÚ¶şµÀ¹¤ĞòµÄÎïÁÏµÄĞòºÅ
+            n2=CNC_order_state_1(find(record_1==num));%å½“å‰è¦ä¸‹æ–™çš„ç‰©æ–™çš„åºå·ï¼Œå³ç¡®è®¤æ­£è¦åšç¬¬äºŒé“å·¥åºçš„ç‰©æ–™çš„åºå·
             t_delta=2*t_1st_uAndD(find(record_1==num));
-            down_1st(n2)=time_all+t_move_choice(s+1);%¼ÇÂ¼ÈÎÎñn2¹¤Ğò1ÏÂÁÏÊ±¼ä
-            up_1st(n)=time_all+t_move_choice(s+1)+0.5*t_delta;%¼ÇÂ¼ÈÎÎñn+1¹¤Ğò1ÉÏÁÏÊ±¼ä
+            down_1st(n2)=time_all+t_move_choice(s+1);%è®°å½•ä»»åŠ¡n2å·¥åº1ä¸‹æ–™æ—¶é—´
+            up_1st(n)=time_all+t_move_choice(s+1)+0.5*t_delta;%è®°å½•ä»»åŠ¡n+1å·¥åº1ä¸Šæ–™æ—¶é—´
         else
             n2=0;
             t_delta=t_1st_uAndD(find(record_1==num));
-            up_1st(n)=time_all+t_move_choice(s+1);%¼ÇÂ¼ÈÎÎñn+1¹¤Ğò1ÉÏÁÏÊ±¼ä
+            up_1st(n)=time_all+t_move_choice(s+1);%è®°å½•ä»»åŠ¡n+1å·¥åº1ä¸Šæ–™æ—¶é—´
         end
 %         time_all=time_all-0.5*delta;
         
-        CNC_num_1(n)=num;%¼ÇÂ¼ÈÎÎñnµÄ¹¤Ğò1CNC±àºÅ
-        if(CNC_1(find(record_1==num))==2)%¼ÇÂ¼µ±Ç°CNC_1ÕıÔÚ×öµÚn¸öÎïÁÏ
+        CNC_num_1(n)=num;%è®°å½•ä»»åŠ¡nçš„å·¥åº1CNCç¼–å·
+        if(CNC_1(find(record_1==num))==2)%è®°å½•å½“å‰CNC_1æ­£åœ¨åšç¬¬nä¸ªç‰©æ–™
             CNC_order_state_1(find(record_1==num))=0;
         else
             CNC_order_state_1(find(record_1==num))=n;
         end
                          
         time_all=time_all+t_move_choice(s+1)+t_delta;
-        location_current=ceil(num/2);%¸üĞÂµ±Ç°Î»ÖÃ
+        location_current=ceil(num/2);%æ›´æ–°å½“å‰ä½ç½®
         
-        CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_move_choice(s+1)+t_delta;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_1µÄÒÑ¼Ó¹¤Ê±¼ä           
-        CNC_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNCÖÃ0
-        CNC_worktime_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+        CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_move_choice(s+1)+t_delta;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_1çš„å·²åŠ å·¥æ—¶é—´           
+        CNC_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCç½®0
+        CNC_worktime_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
         if(CNC_1(find(record_1==num))==0)
-            CNC_1(record_1==num)=1;%¸üĞÂCNC_1×´Ì¬
+            CNC_1(record_1==num)=1;%æ›´æ–°CNC_1çŠ¶æ€
         end
-        CNC_failuretime_1(CNC_1==2)=CNC_failuretime_1(find(CNC_1==2))+t_move_choice(s+1)+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_1µÄÒÑ¹ÊÕÏÊ±¼ä
+        CNC_failuretime_1(CNC_1==2)=CNC_failuretime_1(find(CNC_1==2))+t_move_choice(s+1)+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_1çš„å·²æ•…éšœæ—¶é—´
         index=find(CNC_failuretime_1>=CNC_repairtime_1+CNC_worktofailure_1);
-        if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-            CNC_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
-            CNC_failuretime_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
+        if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+            CNC_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
+            CNC_failuretime_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
             [o,p]=size(index);
             for i=1:p
                 CNC_repairtime_1(index(p))=600+round((1200-600)*rand());
@@ -249,17 +250,17 @@ while(iter<1000)
             CNC_failuretime_1(record_1==num)=0;
         end
         
-        CNC_worktime_2(CNC_2==1)=CNC_worktime_2(find(CNC_2==1))+t_move_choice(s+1)+t_delta;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_2µÄÒÑ¼Ó¹¤Ê±¼ä
-        CNC_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNCÖÃ0
-        CNC_worktime_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+        CNC_worktime_2(CNC_2==1)=CNC_worktime_2(find(CNC_2==1))+t_move_choice(s+1)+t_delta;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_2çš„å·²åŠ å·¥æ—¶é—´
+        CNC_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCç½®0
+        CNC_worktime_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
         
         
 
-        CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta+t_move_choice(s+1);%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_2µÄÒÑ¹ÊÕÏÊ±¼ä
+        CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta+t_move_choice(s+1);%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_2çš„å·²æ•…éšœæ—¶é—´
         index=find(CNC_failuretime_2>=CNC_repairtime_2+CNC_worktofailure_2);
-        if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-            CNC_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
-            CNC_failuretime_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
+        if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+            CNC_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
+            CNC_failuretime_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
             [o,p]=size(index);
             for i=1:p
                 CNC_repairtime_2(index(p))=600+round((1200-600)*rand());
@@ -272,12 +273,12 @@ while(iter<1000)
         
         
  %%
- %µÚ¶şµÀ¹¤Ğò
+ %ç¬¬äºŒé“å·¥åº
          if(n2~=0)
-            location_all(n2,2)=location_current;%¼ÇÂ¼ÈÎÎñn¹¤Ğò2RGVÔË¶¯Î»ÖÃ
-            task_procedure(n2)=2;%ÈÎÎñn´¦ÓÚµÚ¶şµÀ¹¤Ğò
+            location_all(n2,2)=location_current;%è®°å½•ä»»åŠ¡nå·¥åº2RGVè¿åŠ¨ä½ç½®
+            task_procedure(n2)=2;%ä»»åŠ¡nå¤„äºç¬¬äºŒé“å·¥åº
 
-            %È¥CNC_2ÉÏÁÏ£¬Èô¶¼ÔÚ¹¤×÷»ò¹ÊÕÏ,ÔòµÈ´ı×î¿ìÍê³ÉµÄÒ»¸ö
+            %å»CNC_2ä¸Šæ–™ï¼Œè‹¥éƒ½åœ¨å·¥ä½œæˆ–æ•…éšœ,åˆ™ç­‰å¾…æœ€å¿«å®Œæˆçš„ä¸€ä¸ª
             while(isempty(find(CNC_2==0)))
                 a=max(CNC_worktime_2);
                 t_delta=378-a;
@@ -293,19 +294,19 @@ while(iter<1000)
 
                 time_all=time_all+t_delta;
 
-                CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_delta;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_2µÄÒÑ¼Ó¹¤Ê±¼ä
-                CNC_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNCÖÃ0
-                CNC_worktime_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+                CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_delta;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_2çš„å·²åŠ å·¥æ—¶é—´
+                CNC_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCç½®0
+                CNC_worktime_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
 
-                CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_delta;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_1µÄÒÑ¼Ó¹¤Ê±¼ä
-                CNC_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNCÖÃ0
-                CNC_worktime_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+                CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_delta;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_1çš„å·²åŠ å·¥æ—¶é—´
+                CNC_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCç½®0
+                CNC_worktime_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
                 
-                CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_1µÄÒÑ¹ÊÕÏÊ±¼ä
+                CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_1çš„å·²æ•…éšœæ—¶é—´
                 index=find(CNC_failuretime_1>=CNC_repairtime_1+CNC_worktofailure_1);
-                if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-                    CNC_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
-                    CNC_failuretime_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
+                if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+                    CNC_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
+                    CNC_failuretime_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
                     [o,p]=size(index);
                     for i=1:p
                         CNC_repairtime_1(index(p))=600+round((1200-600)*rand());
@@ -314,11 +315,11 @@ while(iter<1000)
                 end
                 index=[];
 
-                CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_2µÄÒÑ¹ÊÕÏÊ±¼ä
+                CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_2çš„å·²æ•…éšœæ—¶é—´
                 index=find(CNC_failuretime_2>=CNC_repairtime_2+CNC_worktofailure_2);
-                if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-                    CNC_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
-                    CNC_failuretime_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
+                if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+                    CNC_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
+                    CNC_failuretime_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
                     [o,p]=size(index);
                     for i=1:p
                         CNC_repairtime_2(index(p))=600+round((1200-600)*rand());
@@ -328,14 +329,14 @@ while(iter<1000)
                 index=[];
             end
 
-            %¾àÀë×î¶Ì
+            %è·ç¦»æœ€çŸ­
 %             numa=record_2(find(CNC_2==0));
 %             sa=abs(location_current-ceil(numa/2));
 %             num=numa(find(sa==min(sa)));
 %             num=num(1);
-            %¾àÀë×î¶Ì
+            %è·ç¦»æœ€çŸ­
             
-            %¾àÀë×î¶Ì+¸ÅÂÊ
+            %è·ç¦»æœ€çŸ­+æ¦‚ç‡
 %             numa=record_2(find(CNC_2==0));
 %             sa=abs(location_current-ceil(numa/2));
 %             [temp1,temp2]=sort(sa);
@@ -346,48 +347,48 @@ while(iter<1000)
 %                       break
 %                  end
 %             end
-            %¾àÀë×î¶Ì+¸ÅÂÊ
-            %Ê±¼ä×î¶Ì
+            %è·ç¦»æœ€çŸ­+æ¦‚ç‡
+            %æ—¶é—´æœ€çŸ­
             numa=record_2(find(CNC_2==0));
             t_consumeall=t_move_choice(ceil(record_2(find(CNC_2==0))/2))+t_odd+t_odd*(CNC_order_state_2(find(CNC_2==0))~=0);
             num=numa(find(t_consumeall==min(t_consumeall)));
             num=num(1);
-            %Ê±¼ä×î¶Ì
-%             %Ê±¼ä×î¶Ì+¸ÅÂÊ
+            %æ—¶é—´æœ€çŸ­
+%             %æ—¶é—´æœ€çŸ­+æ¦‚ç‡
 %             numa=record_2(find(CNC_2==0));
 %             t_consumeall=t_move_choice(ceil(record_1(find(CNC_2==0))/2))+t_odd+t_odd*(CNC_order_state_2(find(CNC_2==0))~=0);
 %             [temp1,temp2]=sort(t_consumeall);
 %           
-%            while(1)%ÒÔ¸ÅÂÊËÑË÷ÒÑÍê³ÉµÄCNC_1
+%            while(1)%ä»¥æ¦‚ç‡æœç´¢å·²å®Œæˆçš„CNC_1
 %                   num=numa(randi(length(numa),1));
 %                   order=temp2(find(temp1==num));
 %                   if(rand()<1/sum(1:order))
 %                         break
 %                   end     
 %            end
-%             %Ê±¼ä×î¶Ì+¸ÅÂÊ
-            s=abs(location_current-ceil(num/2));%ÓëÄ¿±êCNCµÄ¾àÀë
+%             %æ—¶é—´æœ€çŸ­+æ¦‚ç‡
+            s=abs(location_current-ceil(num/2));%ä¸ç›®æ ‡CNCçš„è·ç¦»
             if(round(99*rand())==0)
                 CNC_2(find(record_2==num))=2;
                 failure_num=failure_num+1;
-                failure_task(failure_num,1)=n2;%¼ÇÂ¼¹ÊÕÏµÄÎïÁÏĞòºÅ
-                failure_task(failure_num,2)=num;%¼ÇÂ¼¹ÊÕÏµÄCNC
-                failure_task(failure_num,3)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_2(find(record_2==num));%¼ÇÂ¼CNC¹ÊÕÏµÄ¿ªÊ¼Ê±¼ä
-                failure_task(failure_num,4)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_2(find(record_2==num))+CNC_repairtime_2(find(record_2==num));%¼ÇÂ¼CNC¹ÊÕÏµÄ½áÊøÊ±¼ä
+                failure_task(failure_num,1)=n2;%è®°å½•æ•…éšœçš„ç‰©æ–™åºå·
+                failure_task(failure_num,2)=num;%è®°å½•æ•…éšœçš„CNC
+                failure_task(failure_num,3)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_2(find(record_2==num));%è®°å½•CNCæ•…éšœçš„å¼€å§‹æ—¶é—´
+                failure_task(failure_num,4)=time_all+t_move_choice(s+1)+t_delta+CNC_worktofailure_2(find(record_2==num))+CNC_repairtime_2(find(record_2==num));%è®°å½•CNCæ•…éšœçš„ç»“æŸæ—¶é—´
             end 
             
             if(CNC_order_state_2(find(record_2==num))~=0)
                 t_delta=2*t_2nd_uAndD(find(record_2==num));
-                n3=CNC_order_state_2(find(record_2==num));%µ±Ç°ÒªÏÂÁÏµÄÎïÁÏµÄĞòºÅ£¬¼´È·ÈÏÒÑÍê³ÉµÚ¶şµÀ¹¤ĞòµÈ´ıÇåÏ´µÄÎïÁÏµÄĞòºÅ
-                down_2nd(n3)=time_all+t_move_choice(s+1);%¼ÇÂ¼ÈÎÎñn3¹¤Ğò2ÏÂÁÏÊ±¼ä
-                up_2nd(n2)=time_all+t_move_choice(s+1)+0.5*t_delta;%¼ÇÂ¼ÈÎÎñn2¹¤Ğò2ÉÏÁÏÊ±¼ä
+                n3=CNC_order_state_2(find(record_2==num));%å½“å‰è¦ä¸‹æ–™çš„ç‰©æ–™çš„åºå·ï¼Œå³ç¡®è®¤å·²å®Œæˆç¬¬äºŒé“å·¥åºç­‰å¾…æ¸…æ´—çš„ç‰©æ–™çš„åºå·
+                down_2nd(n3)=time_all+t_move_choice(s+1);%è®°å½•ä»»åŠ¡n3å·¥åº2ä¸‹æ–™æ—¶é—´
+                up_2nd(n2)=time_all+t_move_choice(s+1)+0.5*t_delta;%è®°å½•ä»»åŠ¡n2å·¥åº2ä¸Šæ–™æ—¶é—´
             else
                 t_delta=t_2nd_uAndD(find(record_2==num));
                 n3=0;
-                up_2nd(n2)=time_all+t_move_choice(s+1);%¼ÇÂ¼ÈÎÎñn2¹¤Ğò2ÉÏÁÏÊ±¼ä
+                up_2nd(n2)=time_all+t_move_choice(s+1);%è®°å½•ä»»åŠ¡n2å·¥åº2ä¸Šæ–™æ—¶é—´
             end
-            CNC_num_2(n2)=num;%¼ÇÂ¼ÈÎÎñn2µÄ¹¤Ğò2CNC±àºÅ
-            if(CNC_2(find(record_2==num))==2)%¼ÇÂ¼µ±Ç°CNC_1ÕıÔÚ×öµÚn¸öÎïÁÏ
+            CNC_num_2(n2)=num;%è®°å½•ä»»åŠ¡n2çš„å·¥åº2CNCç¼–å·
+            if(CNC_2(find(record_2==num))==2)%è®°å½•å½“å‰CNC_1æ­£åœ¨åšç¬¬nä¸ªç‰©æ–™
                 CNC_order_state_2(find(record_2==num))=0;
             else
                 CNC_order_state_2(find(record_2==num))=n2;
@@ -395,24 +396,24 @@ while(iter<1000)
             
 
             time_all=time_all+t_move_choice(s+1)+t_delta+t_wash*(n3~=0);
-            location_current=ceil(num/2);%¸üĞÂµ±Ç°Î»ÖÃ
+            location_current=ceil(num/2);%æ›´æ–°å½“å‰ä½ç½®
             
             
             
-            CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_move_choice(s+1)+t_delta+t_wash*(n3~=0);%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_2µÄÒÑ¼Ó¹¤Ê±¼ä           
-            CNC_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNCÖÃ0
-            CNC_worktime_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+            CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_move_choice(s+1)+t_delta+t_wash*(n3~=0);%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_2çš„å·²åŠ å·¥æ—¶é—´           
+            CNC_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCç½®0
+            CNC_worktime_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
 
 
-            CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_move_choice(s+1)+t_delta+t_wash*(n3~=0);%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_1µÄÒÑ¼Ó¹¤Ê±¼ä
-            CNC_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNCÖÃ0
-            CNC_worktime_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+            CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_move_choice(s+1)+t_delta+t_wash*(n3~=0);%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_1çš„å·²åŠ å·¥æ—¶é—´
+            CNC_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCç½®0
+            CNC_worktime_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
             
-            CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta+t_move_choice(s+1)+t_wash*(n3~=0);%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_1µÄÒÑ¹ÊÕÏÊ±¼ä
+            CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta+t_move_choice(s+1)+t_wash*(n3~=0);%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_1çš„å·²æ•…éšœæ—¶é—´
             index=find(CNC_failuretime_1>=CNC_repairtime_1+CNC_worktofailure_1);
-            if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-                CNC_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
-                CNC_failuretime_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
+            if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+                CNC_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
+                CNC_failuretime_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
                 [o,p]=size(index);
                 for i=1:p
                     CNC_repairtime_1(index(p))=600+round((1200-600)*rand());
@@ -421,11 +422,11 @@ while(iter<1000)
             end
             index=[];
 
-            CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta+t_move_choice(s+1)+t_wash*(n3~=0);%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_2µÄÒÑ¹ÊÕÏÊ±¼ä
+            CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta+t_move_choice(s+1)+t_wash*(n3~=0);%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_2çš„å·²æ•…éšœæ—¶é—´
             index=find(CNC_failuretime_2>=CNC_repairtime_2+CNC_worktofailure_2);
-            if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-                CNC_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
-                CNC_failuretime_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
+            if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+                CNC_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
+                CNC_failuretime_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
                 [o,p]=size(index);
                 for i=1:p
                     CNC_repairtime_2(index(p))=600+round((1200-600)*rand());
@@ -434,7 +435,7 @@ while(iter<1000)
             end
             index=[];
             if(CNC_2(find(record_2==num))==0)
-                CNC_2(find(record_2==num))=1;%¸üĞÂCNC_1×´Ì¬
+                CNC_2(find(record_2==num))=1;%æ›´æ–°CNC_1çŠ¶æ€
             end
             
             if( CNC_2(find(record_2==num))==2 )
@@ -442,19 +443,19 @@ while(iter<1000)
             end
 
 %             time_all=time_all+t_wash;
-%             CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_wash;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_2µÄÒÑ¼Ó¹¤Ê±¼ä
-%             CNC_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNCÖÃ0
-%             CNC_worktime_2(find(CNC_worktime_2>=378))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+%             CNC_worktime_2(find(CNC_2==1))=CNC_worktime_2(find(CNC_2==1))+t_wash;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_2çš„å·²åŠ å·¥æ—¶é—´
+%             CNC_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCç½®0
+%             CNC_worktime_2(find(CNC_worktime_2>=378))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
 % 
-%             CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_wash;%¸üĞÂÆäËûÕı¼Ó¹¤µÄCNC_1µÄÒÑ¼Ó¹¤Ê±¼ä
-%             CNC_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNCÖÃ0
-%             CNC_worktime_1(find(CNC_worktime_1>=400))=0;%¼Ó¹¤ÍêCNC¼ÆÊ±ÖÃ0
+%             CNC_worktime_1(find(CNC_1==1))=CNC_worktime_1(find(CNC_1==1))+t_wash;%æ›´æ–°å…¶ä»–æ­£åŠ å·¥çš„CNC_1çš„å·²åŠ å·¥æ—¶é—´
+%             CNC_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCç½®0
+%             CNC_worktime_1(find(CNC_worktime_1>=400))=0;%åŠ å·¥å®ŒCNCè®¡æ—¶ç½®0
 %             
-%             CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_1µÄÒÑ¹ÊÕÏÊ±¼ä
+%             CNC_failuretime_1(find(CNC_1==2))=CNC_failuretime_1(find(CNC_1==2))+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_1çš„å·²æ•…éšœæ—¶é—´
 %             index=find(CNC_failuretime_1>=CNC_repairtime_1);
-%             if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-%                 CNC_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
-%                 CNC_failuretime_1(index)=0;%ĞŞÀíÍêCNCÖÃ0
+%             if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+%                 CNC_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
+%                 CNC_failuretime_1(index)=0;%ä¿®ç†å®ŒCNCç½®0
 %                 [o,p]=size(index);
 %                 for i=1:p
 %                     CNC_repairtime_1(index(p))=600+round((1200-600)*rand());
@@ -462,11 +463,11 @@ while(iter<1000)
 %             end
 %             index=[];
 % 
-%             CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta;%¸üĞÂÆäËûÕı¹ÊÕÏµÄCNC_2µÄÒÑ¹ÊÕÏÊ±¼ä
+%             CNC_failuretime_2(find(CNC_2==2))=CNC_failuretime_2(find(CNC_2==2))+t_delta;%æ›´æ–°å…¶ä»–æ­£æ•…éšœçš„CNC_2çš„å·²æ•…éšœæ—¶é—´
 %             index=find(CNC_failuretime_2>=CNC_repairtime_2);
-%             if(~isempty(index))%ĞŞÀíÍêÖØĞÂÉú³ÉÏÂÒ»´ÎµÄ¹ÊÕÏĞŞÀíÊ±¼ä
-%                 CNC_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
-%                 CNC_failuretime_2(index)=0;%ĞŞÀíÍêCNCÖÃ0
+%             if(~isempty(index))%ä¿®ç†å®Œé‡æ–°ç”Ÿæˆä¸‹ä¸€æ¬¡çš„æ•…éšœä¿®ç†æ—¶é—´
+%                 CNC_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
+%                 CNC_failuretime_2(index)=0;%ä¿®ç†å®ŒCNCç½®0
 %                 [o,p]=size(index);
 %                 for i=1:p
 %                     CNC_repairtime_2(index(p))=600+round((1200-600)*rand());
@@ -474,36 +475,36 @@ while(iter<1000)
 %             end
 %             index=[];
 
-            %up_2nd(n2)=time_all-t_delta-t_wash;%¼ÇÂ¼ÈÎÎñn2¹¤Ğò2ÉÏÁÏÊ±¼ä
+            %up_2nd(n2)=time_all-t_delta-t_wash;%è®°å½•ä»»åŠ¡n2å·¥åº2ä¸Šæ–™æ—¶é—´
            
          end
     end
     iter=iter+1;
-    location_save{iter}=location_all(:,:);%±£´æÃ¿Ò»´ÎµÄÂ·¾¶
-    down_1st_save{iter}=down_1st(1,:);%±£´æÃ¿Ò»´ÎµÄµÚÒ»µÀ¹¤ĞòÏÂÁÏÊ±¼ä
-    up_1st_save{iter}=up_1st(1,:);%±£´æÃ¿Ò»´ÎµÄµÚÒ»µÀ¹¤ĞòÉÏÁÏÊ±¼ä
-    down_2nd_save{iter}=down_2nd(1,:);%±£´æÃ¿Ò»´ÎµÄµÚ¶şµÀ¹¤ĞòÏÂÁÏÊ±¼ä
-    up_2nd_save{iter}=up_2nd(1,:);%±£´æÃ¿Ò»´ÎµÄµÚ¶şµÀ¹¤ĞòÉÏÁÏÊ±¼ä
-    CNC_num_1_save{iter}=CNC_num_1(1,:);%±£´æÃ¿Ò»´ÎµÄ¹¤Ğò1CNC¼Ó¹¤±àºÅĞòÁĞ
-    CNC_num_2_save{iter}=CNC_num_2(1,:);%±£´æÃ¿Ò»´ÎµÄ¹¤Ğò2CNC¼Ó¹¤±àºÅĞòÁĞ
-    task_num(iter,:)=n-failure_num;%±£´æÃ¿Ò»´ÎµÄÍê³ÉÎïÁÏÊı
-    failure_num_save(iter,:)=failure_num;%±£´æÃ¿Ò»´ÎµÄ¹ÊÕÏ´ÎÊı
-    failure_task_save{iter}=failure_task;%±£´æÃ¿Ò»´ÎµÄ¹ÊÕÏ¼ÇÂ¼
+    location_save{iter}=location_all(:,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„è·¯å¾„
+    down_1st_save{iter}=down_1st(1,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„ç¬¬ä¸€é“å·¥åºä¸‹æ–™æ—¶é—´
+    up_1st_save{iter}=up_1st(1,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„ç¬¬ä¸€é“å·¥åºä¸Šæ–™æ—¶é—´
+    down_2nd_save{iter}=down_2nd(1,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„ç¬¬äºŒé“å·¥åºä¸‹æ–™æ—¶é—´
+    up_2nd_save{iter}=up_2nd(1,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„ç¬¬äºŒé“å·¥åºä¸Šæ–™æ—¶é—´
+    CNC_num_1_save{iter}=CNC_num_1(1,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„å·¥åº1CNCåŠ å·¥ç¼–å·åºåˆ—
+    CNC_num_2_save{iter}=CNC_num_2(1,:);%ä¿å­˜æ¯ä¸€æ¬¡çš„å·¥åº2CNCåŠ å·¥ç¼–å·åºåˆ—
+    task_num(iter,:)=n-failure_num;%ä¿å­˜æ¯ä¸€æ¬¡çš„å®Œæˆç‰©æ–™æ•°
+    failure_num_save(iter,:)=failure_num;%ä¿å­˜æ¯ä¸€æ¬¡çš„æ•…éšœæ¬¡æ•°
+    failure_task_save{iter}=failure_task;%ä¿å­˜æ¯ä¸€æ¬¡çš„æ•…éšœè®°å½•
 end
 max(task_num)
 mean(task_num)
 min(task_num)
 %find(task_num==max(task_num))
-% filetitle='C:\Users\Arthur\Documents\MATLAB\¹úÈü\result.xlsx';
-% %´æ´¢µÄexcelµÄÎ»ÖÃºÍÃû³Æ
+% filetitle='C:\Users\Arthur\Documents\MATLAB\å›½èµ›\result.xlsx';
+% %å­˜å‚¨çš„excelçš„ä½ç½®å’Œåç§°
 % for i=1:m
 %     if isempty(location_save{i})
 %     continue;
 %     else
 %         xlrange=['A',num2str(i)];
-%         %´æ´¢±í¸ñÖĞµÄÎ»ÖÃ,Ò»´Î´æÒ»ĞĞ
+%         %å­˜å‚¨è¡¨æ ¼ä¸­çš„ä½ç½®,ä¸€æ¬¡å­˜ä¸€è¡Œ
 %         xlswrite(filetitle,location_save{i},'sheet1',xlrange);
-%         %´æ´¢Ã¿×éÊı¾İ
+%         %å­˜å‚¨æ¯ç»„æ•°æ®
 %     end
 % end
 toc;
